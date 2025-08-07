@@ -1,0 +1,33 @@
+### Login request
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+    "username": "testuser",
+    "password": "password"
+}
+
+### Tokens request
+POST {{baseUrl}}/oauth/token
+Content-Type: application/json
+
+{
+    "grant_type": "password",
+    "client_id": "0198861c-bcec-7322-8e35-c64f64913de5",
+    "client_secret": "G0r9EWnALDLXW6HGcnfJCX75EWDzHQUf0v7BuXpS",
+    "username": "testuser",
+    "password": "password",
+    "scope": "*"
+}
+
+### GET user
+GET {{baseUrl}}/api/user
+Accept: application/json
+
+### Refresh tokens request
+POST {{baseUrl}}/api/refresh-token
+Content-Type: application/json
+
+{
+    "refreshToken": "def50200a2242612e4624942d52f0921d6028ea70c85c429bdf367d15d98ef1b3fe91a108ab266c599a5960de21b51aea55b60e0ca1f3b3551b7c3afbcb04e372c118f65d3bee320bb90f957dd02ef75d392bedabe2d1cb0580ce4cf85df378d91bd3956af22be1802a2c15faf787d00945d28d5b745c3f81a7604de5f25a675f9a16b9fbd39e92a2a1945f61836e5bfe2be7c7fd5821e23bfd9d6dd24e0aef6fd3df13d1c4f27a39e86e0f2d1e68521a0c1204ed640cccb2b16aea842e6713ac4d96a7baf120e6d88dd6d4918f75e431423c304a05c58896f815fec828fdc0d013cd60ab3277e413a1b6f6eb5889c527bc115597e60e519080fc4f1c4f954e0ba772963b3fedd518e0c8f2197fda00e6726dc35fb57dee7e3c6c119422afd1c3060d42912c5eaaa784337ef141c398f8dc594c9028c1fe07503abaa79635d0072cba2f087327edb815adad029566220da6b4423a496bad61828cfc89601d02333a9a08192c91657ec4d8020a45d6f516e7536962b800a2a56b2d8714b71cdeb6bdfc79f8d25b3ea5f"
+}
