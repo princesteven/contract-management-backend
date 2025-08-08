@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends BaseController
 {
@@ -137,21 +138,56 @@ class UserController extends BaseController
 
     /**
      * Deactivate user
-     * @param User $user
-     * @return void
+     * @param int $id
+     * @return JsonResponse
      */
-    public function deactivate(User $user)
+    public function deactivate(int $id): JsonResponse
     {
+        try {
+            $user = User::find($id);
 
+            if (!$user) {
+                return $this->returnError('User not found', 404);
+            }
+
+            $user->is_active = false;
+            $user->save();
+
+            // Revoke all tokens for this user
+            $user->tokens()->where('revoked', false)->get()->each(function ($token) {
+                $token->revoke();
+            });
+
+            return $this->returnResponse('User deactivated successfully', [
+                'user' => $user
+            ]);
+        } catch (\Exception $e) {
+            return $this->returnError('Failed to deactivate user', 500, ['error' => $e->getMessage()]);
+        }
     }
 
     /**
      * Activate user
-     * @param User $user
-     * @return void
+     * @param int $id
+     * @return JsonResponse
      */
-    public function activate(User $user)
+    public function activate(int $id): JsonResponse
     {
+        try {
+            $user = User::find($id);
 
+            if (!$user) {
+                return $this->returnError('User not found', 404);
+            }
+
+            $user->is_active = true;
+            $user->save();
+
+            return $this->returnResponse('User activated successfully', [
+                'user' => $user
+            ]);
+        } catch (\Exception $e) {
+            return $this->returnError('Failed to activate user', 500, ['error' => $e->getMessage()]);
+        }
     }
 }

@@ -18,7 +18,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth:api')->group(function () {
     Route::resource('user', UserController::class)->only(['index', 'show', 'store', 'update']);
     Route::prefix('user')->group(function () {
-        Route::post('deactivate', [UserController::class, 'deactivate']);
-        Route::post('activate', [UserController::class, 'activate']);
+        Route::post('{id}/deactivate', [UserController::class, 'deactivate']);
+        Route::post('{id}/activate', [UserController::class, 'activate']);
     });
 });

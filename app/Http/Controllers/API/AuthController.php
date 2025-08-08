@@ -25,6 +25,18 @@ class AuthController extends BaseController
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
+            // Check if user is active
+            $user = Auth::user();
+            if (!$user->is_active) {
+                Auth::logout();
+                return $this->returnError("Can't generate token for Deactivated user. Please contact administrator", 403);
+            }
+
+            // Revoke all previous tokens before issuing new ones
+            $user->tokens()->where('revoked', false)->get()->each(function ($token) {
+                $token->revoke();
+            });
+
             // Get your OAuth client credentials
             $client = Client::whereJsonContains('grant_types', 'password')
                 ->orWhereJsonContains('grant_types', 'refresh_token')

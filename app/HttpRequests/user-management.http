@@ -4,7 +4,7 @@ Accept: application/json
 Authorization: {{token}}
 
 ### Get single user
-GET {{baseUrl}}/api/user/2
+GET {{baseUrl}}/api/user/1
 Accept: application/json
 Authorization: {{token}}
 
@@ -30,6 +30,18 @@ Authorization: {{token}}
   "email": "updated.email@example.com",
   "is_active": true
 }
+
+### Deactivate user
+POST {{baseUrl}}/api/user/3/deactivate
+Content-Type: application/json
+Accept: application/json
+Authorization: {{token}}
+
+### Activate user
+POST {{baseUrl}}/api/user/3/activate
+Content-Type: application/json
+Accept: application/json
+Authorization: {{token}}
 
 ### Tokens request
 POST {{baseUrl}}/oauth/token
