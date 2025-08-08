@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,7 +41,6 @@ class UserController extends BaseController
             $users = $query->limit($limit)->get();
 
             return $this->returnResponse('Users retrieved successfully', [
-                'success' => true,
                 'users' => $users
             ]);
         } catch (\Exception $e) {
@@ -62,11 +62,10 @@ class UserController extends BaseController
             $user->username = $request->username;
             $user->email = $request->email;
             $user->password = Hash::make('password'); // Default password
-            $user->isActive = true; // Set user as active by default
+            $user->is_active = true; // Set user as active by default
             $user->save();
 
             return $this->returnResponse('User created successfully', [
-                'success' => true,
                 'user' => $user
             ]);
         } catch (\Exception $e) {
@@ -76,18 +75,64 @@ class UserController extends BaseController
 
     /**
      * Display the specified resource.
+     *
+     * @param int $id
+     * @return JsonResponse
      */
-    public function show(User $user)
+    public function show($id): JsonResponse
     {
-        //
+        try {
+            $user = User::find($id);
+
+            if (!$user) {
+                return $this->returnError('User not found', 404);
+            }
+
+            return $this->returnResponse('User retrieved successfully', [
+                'user' => $user
+            ]);
+        } catch (\Exception $e) {
+            return $this->returnError('Failed to retrieve user', 500, ['error' => $e->getMessage()]);
+        }
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param UpdateUserRequest $request
+     * @param int $id
+     * @return JsonResponse
      */
-    public function update(CreateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, int $id): JsonResponse
     {
-        //
+        try {
+            $user = User::find($id);
+
+            if (!$user) {
+                return $this->returnError('User not found', 404);
+            }
+
+            // Update only the fields that are present in the request
+            if ($request->has('name')) {
+                $user->name = $request->name;
+            }
+
+            if ($request->has('email')) {
+                $user->email = $request->email;
+            }
+
+            if ($request->has('is_active')) {
+                $user->is_active = $request->is_active;
+            }
+
+            $user->save();
+
+            return $this->returnResponse('User updated successfully', [
+                'user' => $user
+            ]);
+        } catch (\Exception $e) {
+            return $this->returnError('Failed to update user', 500, ['error' => $e->getMessage()]);
+        }
     }
 
     /**

@@ -49,7 +49,6 @@ class AuthController extends BaseController
 
             if ($tokenResponse->getStatusCode() === 200) {
                 return $this->returnResponse('Login successful', [
-                    'success' => true,
                     'tokens' => [
                         'access_token' => $tokenData['access_token'],
                         'refresh_token' => $tokenData['refresh_token'],
@@ -109,7 +108,6 @@ class AuthController extends BaseController
 
         if ($tokenResponse->getStatusCode() === 200) {
             return $this->returnResponse('Login successful', [
-                'success' => true,
                 'tokens' => [
                     'access_token' => $tokenData['access_token'],
                     'refresh_token' => $tokenData['refresh_token'],
@@ -128,7 +126,6 @@ class AuthController extends BaseController
     public function getAuthenticatedUser(Request $request): JsonResponse
     {
         return $this->returnResponse('User data retrieved successfully', [
-            'success' => true,
             'user' => $request->user()
         ]);
     }
