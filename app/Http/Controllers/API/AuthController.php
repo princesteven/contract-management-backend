@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\BaseController;
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RefreshTokenRequest;
-use App\Models\User;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Client;
-use Laravel\Passport\RefreshToken;
+use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\BaseController;
+use App\Http\Requests\RefreshTokenRequest;
 
 class AuthController extends BaseController
 {
     /**
      * Login user and create token
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param LoginRequest $request
+     * @return JsonResponse
+     * @throws Exception
      */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->only('username', 'password');
 
@@ -67,9 +68,9 @@ class AuthController extends BaseController
      * Logout user (Revoke the token)
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         $request->user()->token()->revoke();
 
@@ -78,7 +79,12 @@ class AuthController extends BaseController
         ]);
     }
 
-    public function refreshToken(RefreshTokenRequest $request)
+    /**
+     * @param RefreshTokenRequest $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function refreshToken(RefreshTokenRequest $request): JsonResponse
     {
         // Get your OAuth client credentials
         $client = Client::whereJsonContains('grant_types', 'password')
@@ -108,10 +114,22 @@ class AuthController extends BaseController
                     'access_token' => $tokenData['access_token'],
                     'refresh_token' => $tokenData['refresh_token'],
                 ],
-//                'user' => User::find($accessToken->user_id)
+                //'user' => User::find($accessToken->user_id)
             ]);
         }
 
         return $this->returnError("Failed to generate tokens", 500, $tokenData);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getAuthenticatedUser(Request $request): JsonResponse
+    {
+        return $this->returnResponse('User data retrieved successfully', [
+            'success' => true,
+            'user' => $request->user()
+        ]);
     }
 }
