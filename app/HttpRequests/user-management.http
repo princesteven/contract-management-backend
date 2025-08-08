@@ -1,3 +1,8 @@
+### GET users
+GET {{baseUrl}}/api/user?limit=10&username=john.doe&name=test
+Accept: application/json
+Authorization: {{token}}
+
 ### Create user
 POST {{baseUrl}}/api/user
 Content-Type: application/json

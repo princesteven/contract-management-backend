@@ -6,16 +6,46 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\CreateUserRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends BaseController
 {
     /**
      * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        //
+        try {
+            $limit = $request->input('limit', 10);
+            $query = User::query();
+
+            // Apply filters if provided
+            if ($request->has('username')) {
+                $query->where('username', $request->username);
+            }
+
+            if ($request->has('name')) {
+                $query->where('name', 'like', '%' . $request->name . '%');
+            }
+
+            if ($request->has('status')) {
+                $isActive = filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN);
+                $query->where('is_active', $isActive);
+            }
+
+            $users = $query->limit($limit)->get();
+
+            return $this->returnResponse('Users retrieved successfully', [
+                'success' => true,
+                'users' => $users
+            ]);
+        } catch (\Exception $e) {
+            return $this->returnError('Failed to retrieve users', 500, ['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -32,6 +62,7 @@ class UserController extends BaseController
             $user->username = $request->username;
             $user->email = $request->email;
             $user->password = Hash::make('password'); // Default password
+            $user->isActive = true; // Set user as active by default
             $user->save();
 
             return $this->returnResponse('User created successfully', [
