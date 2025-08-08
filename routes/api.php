@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Auth Routes
@@ -11,5 +11,14 @@ Route::prefix('auth')->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('user', [AuthController::class, 'getAuthenticatedUser']);
+    });
+});
+
+// User Management Routes
+Route::middleware('auth:api')->group(function () {
+    Route::resource('user', UserController::class)->only(['index', 'show', 'store', 'update']);
+    Route::prefix('user')->group(function () {
+        Route::post('deactivate', [UserController::class, 'deactivate']);
+        Route::post('activate', [UserController::class, 'activate']);
     });
 });
