@@ -37,6 +37,8 @@ class UpdateUserRequest extends FormRequest
                 Rule::unique('users', 'email')->ignore($userId)
             ],
             'is_active' => 'sometimes|boolean',
+            'roles' => 'array',
+            'roles.*' => 'exists:roles,id',
         ];
     }
 
@@ -53,6 +55,8 @@ class UpdateUserRequest extends FormRequest
             'email.email' => 'Please enter a valid email address.',
             'email.unique' => 'This email is already registered.',
             'is_active.boolean' => 'The active status must be true or false.',
+            'roles.array' => 'Roles must be an array.',
+            'roles.*.exists' => 'One or more selected roles do not exist.',
         ];
     }
 

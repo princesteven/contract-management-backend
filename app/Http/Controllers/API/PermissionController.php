@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\BaseController;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
+
+class PermissionController extends BaseController
+{
+    /**
+     * Display a listing of permissions.
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function index(Request $request): JsonResponse
+    {
+        try {
+            $limit = $request->input('limit', 10);
+            
+            // Handle special case for returning all permissions
+            if ($limit === '*') {
+                $permissions = Permission::all();
+            } else {
+                $permissions = Permission::limit($limit)->get();
+            }
+
+            return $this->returnResponse('Permissions retrieved successfully', [
+                'permissions' => $permissions
+            ]);
+        } catch (\Exception $e) {
+            return $this->returnError('Failed to retrieve permissions', 500, ['error' => $e->getMessage()]);
+        }
+    }
+}

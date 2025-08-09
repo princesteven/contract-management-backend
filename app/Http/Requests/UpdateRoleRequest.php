@@ -5,8 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
-class CreateUserRequest extends FormRequest
+class UpdateRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +24,19 @@ class CreateUserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $roleId = $this->route('id');
+        
         return [
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
-            'roles' => 'array',
-            'roles.*' => 'exists:roles,id',
+            'name' => [
+                'sometimes',
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('roles', 'name')->ignore($roleId)
+            ],
+            'permissions' => 'array',
+            'permissions.*' => 'exists:permissions,id',
+            'is_active' => 'sometimes|boolean'
         ];
     }
 
@@ -40,14 +48,11 @@ class CreateUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'The name field is required.',
-            'username.required' => 'The username field is required.',
-            'username.unique' => 'This username is already taken.',
-            'email.required' => 'The email field is required.',
-            'email.email' => 'Please enter a valid email address.',
-            'email.unique' => 'This email is already registered.',
-            'roles.array' => 'Roles must be an array.',
-            'roles.*.exists' => 'One or more selected roles do not exist.',
+            'name.required' => 'The role name field is required.',
+            'name.unique' => 'This role name is already taken.',
+            'permissions.array' => 'Permissions must be an array.',
+            'permissions.*.exists' => 'One or more selected permissions do not exist.',
+            'is_active.boolean' => 'The active status must be true or false.',
         ];
     }
 

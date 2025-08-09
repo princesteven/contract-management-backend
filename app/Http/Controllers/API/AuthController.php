@@ -60,12 +60,29 @@ class AuthController extends BaseController
             $tokenData = json_decode($tokenResponse->getContent(), true);
 
             if ($tokenResponse->getStatusCode() === 200) {
+                // Load user with roles and permissions for response
+                $userWithPermissions = Auth::user()->load('roles.permissions');
+                $permissions = $userWithPermissions->getAllPermissions()->pluck('name')->toArray();
+
                 return $this->returnResponse('Login successful', [
                     'tokens' => [
                         'access_token' => $tokenData['access_token'],
                         'refresh_token' => $tokenData['refresh_token'],
                     ],
-                    'user' => Auth::user()
+                    'user' => [
+                        'id' => $userWithPermissions->id,
+                        'name' => $userWithPermissions->name,
+                        'username' => $userWithPermissions->username,
+                        'email' => $userWithPermissions->email,
+                        'is_active' => $userWithPermissions->is_active,
+                        'roles' => $userWithPermissions->roles->map(function ($role) {
+                            return [
+                                'id' => $role->id,
+                                'name' => $role->name,
+                            ];
+                        }),
+                        'permissions' => $permissions
+                    ]
                 ]);
             }
 
@@ -132,13 +149,31 @@ class AuthController extends BaseController
     }
 
     /**
+     * Get authenticated user with roles and permissions
+     *
      * @param Request $request
      * @return JsonResponse
      */
     public function getAuthenticatedUser(Request $request): JsonResponse
     {
+        $user = $request->user()->load('roles.permissions');
+        $permissions = $user->getAllPermissions()->pluck('name')->toArray();
+
         return $this->returnResponse('User data retrieved successfully', [
-            'user' => $request->user()
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'username' => $user->username,
+                'email' => $user->email,
+                'is_active' => $user->is_active,
+                'roles' => $user->roles->map(function ($role) {
+                    return [
+                        'id' => $role->id,
+                        'name' => $role->name,
+                    ];
+                }),
+                'permissions' => $permissions
+            ]
         ]);
     }
 }

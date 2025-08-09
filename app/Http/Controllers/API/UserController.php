@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class UserController extends BaseController
 {
@@ -66,6 +67,15 @@ class UserController extends BaseController
             $user->is_active = true; // Set user as active by default
             $user->save();
 
+            // Assign roles if provided
+            if ($request->has('roles')) {
+                $roles = Role::whereIn('id', $request->roles)->get();
+                $user->syncRoles($roles);
+            }
+
+            // Load roles for response
+            $user->load('roles');
+
             return $this->returnResponse('User created successfully', [
                 'user' => $user
             ]);
@@ -83,7 +93,7 @@ class UserController extends BaseController
     public function show($id): JsonResponse
     {
         try {
-            $user = User::find($id);
+            $user = User::with('roles')->find($id);
 
             if (!$user) {
                 return $this->returnError('User not found', 404);
@@ -128,6 +138,15 @@ class UserController extends BaseController
 
             $user->save();
 
+            // Update roles if provided (sync operation)
+            if ($request->has('roles')) {
+                $roles = Role::whereIn('id', $request->roles)->get();
+                $user->syncRoles($roles);
+            }
+
+            // Load roles for response
+            $user->load('roles');
+
             return $this->returnResponse('User updated successfully', [
                 'user' => $user
             ]);
@@ -153,7 +172,7 @@ class UserController extends BaseController
             $user->is_active = false;
             $user->save();
 
-            // Revoke all tokens for this user
+            // Revoke all active tokens for this user
             $user->tokens()->where('revoked', false)->get()->each(function ($token) {
                 $token->revoke();
             });

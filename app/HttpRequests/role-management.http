@@ -1,0 +1,64 @@
+### Get all roles
+GET {{baseUrl}}/api/role?limit=1
+Accept: application/json
+Authorization: {{token}}
+
+### Get all roles (unlimited)
+GET {{baseUrl}}/api/role?limit=*
+Accept: application/json
+Authorization: {{token}}
+
+### Get single role with permissions
+GET {{baseUrl}}/api/role/1
+Accept: application/json
+Authorization: {{token}}
+
+### Create role
+POST {{baseUrl}}/api/role
+Content-Type: application/json
+Accept: application/json
+Authorization: {{token}}
+
+{
+  "name": "admini2",
+  "permissions": [1, 2, 3, 4, 5, 6],
+  "is_active": true
+}
+
+### Update role
+PUT {{baseUrl}}/api/role/1
+Content-Type: application/json
+Accept: application/json
+Authorization: {{token}}
+
+{
+  "name": "super-admin",
+  "permissions": [1, 2, 3, 4, 5, 6, 7, 8],
+  "is_active": true
+}
+
+### Update role without permissions (won't change permissions)
+PUT {{baseUrl}}/api/role/1
+Content-Type: application/json
+Accept: application/json
+Authorization: {{token}}
+
+{
+  "name": "administrator",
+  "is_active": true
+}
+
+### Delete role
+DELETE {{baseUrl}}/api/role/1
+Accept: application/json
+Authorization: {{token}}
+
+### Get all permissions
+GET {{baseUrl}}/api/permissions?limit=*
+Accept: application/json
+Authorization: {{token}}
+
+### Get limited permissions
+GET {{baseUrl}}/api/permissions?limit=5
+Accept: application/json
+Authorization: {{token}}
