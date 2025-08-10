@@ -20,45 +20,42 @@ Accept: application/json
 Authorization: {{token}}
 
 {
-  "name": "Jane Doe",
-  "username": "jane.doe",
-  "email": "jane.doe@example.com",
+  "name": "Esau Doe",
+  "username": "esau.doe",
+  "email": "esau.doe@example.com",
   "roles": [1, 2]
 }
 
 ### Update user with roles
-PUT {{baseUrl}}/api/user/1
+PUT {{baseUrl}}/api/user/5
 Content-Type: application/json
 Accept: application/json
 Authorization: {{token}}
 
 {
-  "name": "Updated Name",
-  "email": "updated.email@example.com",
-  "is_active": true,
-  "roles": [1]
+  "roles": [4]
 }
 
 ### Update user without roles (won't change roles)
-PUT {{baseUrl}}/api/user/3
+PUT {{baseUrl}}/api/user/5
 Content-Type: application/json
 Accept: application/json
 Authorization: {{token}}
 
 {
-  "name": "Updated Name Only",
-  "email": "updated.email@example.com",
-  "is_active": true
+  "name": "Juma Nature",
+  "email": "juma.nature@example.com",
+  "is_active": false
 }
 
 ### Deactivate user
-POST {{baseUrl}}/api/user/3/deactivate
+POST {{baseUrl}}/api/user/5/deactivate
 Content-Type: application/json
 Accept: application/json
 Authorization: {{token}}
 
 ### Activate user
-POST {{baseUrl}}/api/user/3/activate
+POST {{baseUrl}}/api/user/5/activate
 Content-Type: application/json
 Accept: application/json
 Authorization: {{token}}

@@ -42,11 +42,12 @@ class RoleSeeder extends Seeder
             // Create role if it doesn't exist
             $role = Role::firstOrCreate([
                 'name' => $roleName,
+                'guard_name' => 'api',
                 'is_active' => true
             ]);
 
-            // Get permissions by name
-            $permissions = Permission::whereIn('name', $permissionNames)->get();
+            // Get permissions by name and guard
+            $permissions = Permission::where('guard_name', 'api')->whereIn('name', $permissionNames)->get();
             
             // Sync permissions to role
             $role->syncPermissions($permissions);

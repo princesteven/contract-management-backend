@@ -37,7 +37,10 @@ class PermissionSeeder extends Seeder
 
         // Create permissions only if they don't exist (idempotent)
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'api'
+            ]);
         }
 
         $this->command->info('Permissions created successfully!');

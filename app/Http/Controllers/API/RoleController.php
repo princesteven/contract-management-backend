@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\CreateRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use App\Http\Resources\RoleResource;
+use App\Traits\AuditLogger;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -12,22 +14,26 @@ use Spatie\Permission\Models\Permission;
 
 class RoleController extends BaseController
 {
+    use AuditLogger;
+
     /**
      * Display a listing of roles.
-     * 
+     *
      * @param Request $request
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Role::class);
+
         try {
             $limit = $request->input('limit', 10);
-            
+
             // Handle special case for returning all roles
             if ($limit === '*') {
-                $roles = Role::all();
+                $roles = Role::where('guard_name', 'api')->get();
             } else {
-                $roles = Role::limit($limit)->get();
+                $roles = Role::where('guard_name', 'api')->limit($limit)->get();
             }
 
             return $this->returnResponse('Roles retrieved successfully', [
@@ -40,21 +46,23 @@ class RoleController extends BaseController
 
     /**
      * Display the specified role with permissions.
-     * 
+     *
      * @param int $id
      * @return JsonResponse
      */
     public function show(int $id): JsonResponse
     {
+        $this->authorize('view', Role::class);
+        
         try {
-            $role = Role::with('permissions')->find($id);
+            $role = Role::where('guard_name', 'api')->with('permissions')->find($id);
 
             if (!$role) {
                 return $this->returnError('Role not found', 404);
             }
 
             return $this->returnResponse('Role retrieved successfully', [
-                'role' => $role
+                'role' => new RoleResource($role)
             ]);
         } catch (\Exception $e) {
             return $this->returnError('Failed to retrieve role', 500, ['error' => $e->getMessage()]);
@@ -63,16 +71,19 @@ class RoleController extends BaseController
 
     /**
      * Store a newly created role.
-     * 
+     *
      * @param CreateRoleRequest $request
      * @return JsonResponse
      */
     public function store(CreateRoleRequest $request): JsonResponse
     {
+        $this->authorize('create', Role::class);
+
         try {
-            // Create role
+            // Create role with the api guard
             $role = Role::create([
                 'name' => $request->name,
+                'guard_name' => 'api', // Explicitly set the guard
                 'is_active' => $request->is_active ?? true
             ]);
 
@@ -85,8 +96,10 @@ class RoleController extends BaseController
             // Load permissions for response
             $role->load('permissions');
 
+            $this->logRoleCreated($role);
+
             return $this->returnResponse('Role created successfully', [
-                'role' => $role
+                'role' => new RoleResource($role)
             ]);
         } catch (\Exception $e) {
             return $this->returnError('Failed to create role', 500, ['error' => $e->getMessage()]);
@@ -95,19 +108,24 @@ class RoleController extends BaseController
 
     /**
      * Update the specified role.
-     * 
+     *
      * @param UpdateRoleRequest $request
      * @param int $id
      * @return JsonResponse
      */
     public function update(UpdateRoleRequest $request, int $id): JsonResponse
     {
+        $this->authorize('update', Role::class);
+
         try {
-            $role = Role::find($id);
+            $role = Role::where('guard_name', 'api')->find($id);
 
             if (!$role) {
                 return $this->returnError('Role not found', 404);
             }
+
+            // Store original data for audit logging
+            $originalData = $role->getOriginal();
 
             // Update role basic info
             if ($request->has('name')) {
@@ -129,8 +147,10 @@ class RoleController extends BaseController
             // Load permissions for response
             $role->load('permissions');
 
+            $this->logRoleUpdated($role, $originalData);
+
             return $this->returnResponse('Role updated successfully', [
-                'role' => $role
+                'role' => new RoleResource($role)
             ]);
         } catch (\Exception $e) {
             return $this->returnError('Failed to update role', 500, ['error' => $e->getMessage()]);
@@ -139,20 +159,27 @@ class RoleController extends BaseController
 
     /**
      * Remove the specified role.
-     * 
+     *
      * @param int $id
      * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
     {
+        $this->authorize('delete', Role::class);
+
         try {
-            $role = Role::find($id);
+            $role = Role::where('guard_name', 'api')->find($id);
 
             if (!$role) {
                 return $this->returnError('Role not found', 404);
             }
 
+            // Store role data for audit logging before deletion
+            $roleData = $role->toArray();
+
             $role->delete();
+
+            $this->logRoleDeleted($role);
 
             return $this->returnResponse('Role deleted successfully', []);
         } catch (\Exception $e) {

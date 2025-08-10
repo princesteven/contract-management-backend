@@ -9,7 +9,7 @@ Accept: application/json
 Authorization: {{token}}
 
 ### Get single role with permissions
-GET {{baseUrl}}/api/role/1
+GET {{baseUrl}}/api/role/4
 Accept: application/json
 Authorization: {{token}}
 
@@ -20,31 +20,31 @@ Accept: application/json
 Authorization: {{token}}
 
 {
-  "name": "admini2",
-  "permissions": [1, 2, 3, 4, 5, 6],
+  "name": "local-administrator",
+  "permissions": [1],
   "is_active": true
 }
 
 ### Update role
-PUT {{baseUrl}}/api/role/1
+PUT {{baseUrl}}/api/role/9
 Content-Type: application/json
 Accept: application/json
 Authorization: {{token}}
 
 {
-  "name": "super-admin",
+  "name": "local-super-administrator",
   "permissions": [1, 2, 3, 4, 5, 6, 7, 8],
   "is_active": true
 }
 
 ### Update role without permissions (won't change permissions)
-PUT {{baseUrl}}/api/role/1
+PUT {{baseUrl}}/api/role/9
 Content-Type: application/json
 Accept: application/json
 Authorization: {{token}}
 
 {
-  "name": "administrator",
+  "name": "local-administrator",
   "is_active": true
 }
 
