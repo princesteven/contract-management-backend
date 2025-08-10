@@ -25,11 +25,23 @@ class PermissionController extends BaseController
         try {
             $limit = $request->input('limit', 10);
             
+            $query = Permission::where('guard_name', 'api');
+
+            $query->where(function ($q) use ($request) {
+                if ($request->has('name')) {
+                    $q->orWhere('name', 'like', '%' . $request->name . '%');
+                }
+
+                if ($request->has('guard_name')) {
+                    $q->orWhere('guard_name', $request->guard_name);
+                }
+            });
+            
             // Handle special case for returning all permissions
             if ($limit === '*') {
-                $permissions = Permission::where('guard_name', 'api')->get();
+                $permissions = $query->get();
             } else {
-                $permissions = Permission::where('guard_name', 'api')->limit($limit)->get();
+                $permissions = $query->limit($limit)->get();
             }
 
             return $this->returnResponse('Permissions retrieved successfully', [

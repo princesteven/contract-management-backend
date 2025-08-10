@@ -1,0 +1,142 @@
+### Get All Audit Logs (Basic)
+GET {{baseUrl}}/api/audit-logs
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Get All Audit Logs with Limit
+GET {{baseUrl}}/api/audit-logs?limit=1
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Get All Audit Logs (No Limit)
+GET {{baseUrl}}/api/audit-logs?limit=*
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Get Audit Logs Filtered by User ID
+GET {{baseUrl}}/api/audit-logs?user_id=3
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Get Audit Logs Filtered by Action
+GET {{baseUrl}}/api/audit-logs?action=user_created
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Get Audit Logs Filtered by Model Type
+GET {{baseUrl}}/api/audit-logs?model_type=App\Models\User
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Get Audit Logs Filtered by Date Range
+GET {{baseUrl}}/api/audit-logs?date_from=2025-01-01&date_to=2025-12-31
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Test OR Logic: User ID OR Action (should return logs matching either condition)
+GET {{baseUrl}}/api/audit-logs?user_id=1&action=role_created
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Test OR Logic: Multiple Actions (should return logs matching any action)
+GET {{baseUrl}}/api/audit-logs?action=user_created&action=user_updated
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Test OR Logic: User OR Model Type (should return logs matching either condition)
+GET {{baseUrl}}/api/audit-logs?user_id=3&model_type=App\Models\Role
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Test OR Logic: Date OR Action (should return logs matching either condition)
+GET {{baseUrl}}/api/audit-logs?date_from=2025-01-01&action=permissions_viewed
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Get Audit Logs with Multiple Filters (OR Logic)
+GET {{baseUrl}}/api/audit-logs?user_id=1&action=user_updated&limit=5
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Get Specific Audit Log Details (Replace {id} with actual audit log ID)
+GET {{baseUrl}}/api/audit-logs/1
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Get Specific Audit Log Details (Replace {id} with actual audit log ID)
+GET {{baseUrl}}/api/audit-logs/2
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Test Unauthorized Access (No Token)
+GET {{baseUrl}}/api/audit-logs
+Content-Type: application/json
+
+###
+
+### Test Unauthorized Access to Specific Log (No Token)
+GET {{baseUrl}}/api/audit-logs/1
+Content-Type: application/json
+
+###
+
+### Test Invalid Audit Log ID (404 Error)
+GET {{baseUrl}}/api/audit-logs/99999
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Test with Invalid Date Format
+GET {{baseUrl}}/api/audit-logs?date_from=invalid-date
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Test with Large Limit Value
+GET {{baseUrl}}/api/audit-logs?limit=100
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Get Audit Logs for Role Actions
+GET {{baseUrl}}/api/audit-logs?action=role_created
+Authorization: {{token}}
+Content-Type: application/json
+
+###
+
+### Get Audit Logs for Permission Actions
+GET {{baseUrl}}/api/audit-logs?action=permissions_viewed
+Authorization: {{token}}
+Content-Type: application/json

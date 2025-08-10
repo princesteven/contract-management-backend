@@ -19,12 +19,14 @@ class RoleSeeder extends Seeder
             'super-admin' => [
                 'view-users', 'create-users', 'edit-users', 'delete-users', 'activate-users', 'deactivate-users',
                 'view-roles', 'create-roles', 'edit-roles', 'delete-roles', 'assign-roles',
-                'view-permissions', 'manage-permissions'
+                'view-permissions', 'manage-permissions',
+                'view-audit-logs', 'delete-audit-logs'
             ],
             'admin' => [
                 'view-users', 'create-users', 'edit-users', 'activate-users', 'deactivate-users',
                 'view-roles', 'assign-roles',
-                'view-permissions'
+                'view-permissions',
+                'view-audit-logs'
             ],
             'manager' => [
                 'view-users', 'create-users', 'edit-users',

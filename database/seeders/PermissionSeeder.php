@@ -33,6 +33,10 @@ class PermissionSeeder extends Seeder
             // Permission Management
             'view-permissions',
             'manage-permissions',
+            
+            // Audit Log Management
+            'view-audit-logs',
+            'delete-audit-logs',
         ];
 
         // Create permissions only if they don't exist (idempotent)

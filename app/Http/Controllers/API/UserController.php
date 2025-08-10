@@ -34,19 +34,20 @@ class UserController extends BaseController
             $limit = $request->input('limit', 10);
             $query = User::query();
 
-            // Apply filters if provided
-            if ($request->has('username')) {
-                $query->where('username', $request->username);
-            }
+            $query->where(function ($q) use ($request) {
+                if ($request->has('username')) {
+                    $q->orWhere('username', $request->username);
+                }
 
-            if ($request->has('name')) {
-                $query->where('name', 'like', '%' . $request->name . '%');
-            }
+                if ($request->has('name')) {
+                    $q->orWhere('name', 'like', '%' . $request->name . '%');
+                }
 
-            if ($request->has('status')) {
-                $isActive = filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN);
-                $query->where('is_active', $isActive);
-            }
+                if ($request->has('status')) {
+                    $isActive = filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN);
+                    $q->orWhere('is_active', $isActive);
+                }
+            });
 
             $users = $query->limit($limit)->get();
 
