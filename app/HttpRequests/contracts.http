@@ -1,0 +1,102 @@
+### 1. Get all contracts
+GET {{baseUrl}}/contracts
+Authorization: {{token}}
+
+### 2. Get contracts with filters (OR logic)
+GET {{baseUrl}}/contracts?title=Service&is_active=true&limit=5
+Authorization: {{token}}
+
+### 3. Get contracts by status
+GET {{baseUrl}}/contracts?status=active
+Authorization: {{token}}
+
+### 4. Get expiring contracts
+GET {{baseUrl}}/contracts?status=expiring
+Authorization: {{token}}
+
+### 5. Get contracts by date range
+GET {{baseUrl}}/contracts?date_signed_from=2024-01-01&expiry_date_to=2024-12-31
+Authorization: {{token}}
+
+### 6. Get contracts with unlimited results
+GET {{baseUrl}}/contracts?limit=*
+Authorization: {{token}}
+
+### 7. Create a new contract
+POST {{baseUrl}}/contracts
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "title": "Software Development Contract",
+  "contract_counter_party_id": 1,
+  "business_unit_id": 1,
+  "date_signed": "2024-08-01",
+  "expiry_date": "2025-08-01",
+  "is_active": true
+}
+
+### 8. Get specific contract
+GET {{baseUrl}}/contracts/1
+Authorization: {{token}}
+
+### 9. Update contract
+PUT {{baseUrl}}/contracts/1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "title": "Updated Software Development Contract",
+  "expiry_date": "2025-12-31"
+}
+
+### 10. Partial update contract
+PATCH {{baseUrl}}/contracts/1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "is_active": false
+}
+
+### 11. Delete contract
+DELETE {{baseUrl}}/contracts/1
+Authorization: {{token}}
+
+### 12. Test validation errors - missing required fields
+POST {{baseUrl}}/contracts
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "title": ""
+}
+
+### 13. Test validation errors - invalid dates
+POST {{baseUrl}}/contracts
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "title": "Test Contract",
+  "contract_counter_party_id": 1,
+  "business_unit_id": 1,
+  "date_signed": "2024-08-01",
+  "expiry_date": "2024-07-01"
+}
+
+### 14. Test authorization - without token
+GET {{baseUrl}}/contracts
+
+### 15. Test with non-existent counter party
+POST {{baseUrl}}/contracts
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "title": "Test Contract",
+  "contract_counter_party_id": 999,
+  "business_unit_id": 1,
+  "date_signed": "2024-08-01",
+  "expiry_date": "2025-08-01"
+}

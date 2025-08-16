@@ -6,6 +6,9 @@ use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\PermissionController;
 use App\Http\Controllers\AuditLogController;
 use Illuminate\Support\Facades\Route;
+use \App\Http\Controllers\API\BusinessUnitController;
+use \App\Http\Controllers\API\ContractCounterPartyController;
+use \App\Http\Controllers\API\ContractController;
 
 // Auth Routes
 Route::prefix('auth')->group(function () {
@@ -40,4 +43,16 @@ Route::middleware('auth:api')->group(function () {
 Route::middleware('auth:api')->group(function () {
     Route::get('audit-logs', [AuditLogController::class, 'index']);
     Route::get('audit-logs/{auditLog}', [AuditLogController::class, 'show']);
+});
+
+// Contract Management Routes
+Route::middleware('auth:api')->group(function () {
+    // Business Units
+    Route::resource('business-units', BusinessUnitController::class)->only(['index', 'show', 'store', 'update']);
+
+    // Contract Counter Parties
+    Route::resource('contract-counter-parties', ContractCounterPartyController::class)->only(['index', 'show', 'store', 'update']);
+
+    // Contracts
+    Route::resource('contracts', ContractController::class)->only(['index', 'show', 'store', 'update']);
 });

@@ -1,0 +1,136 @@
+### 1. Get all business units
+GET {{baseUrl}}/business-units
+Authorization: {{token}}
+
+### 2. Get business units with filters (OR logic)
+GET {{baseUrl}}/business-units?name=IT&description=technology&limit=5
+Authorization: {{token}}
+
+### 3. Get active business units only
+GET {{baseUrl}}/business-units?is_active=true
+Authorization: {{token}}
+
+### 4. Search by name
+GET {{baseUrl}}/business-units?name=Marketing
+Authorization: {{token}}
+
+### 5. Search by description
+GET {{baseUrl}}/business-units?description=sales
+Authorization: {{token}}
+
+### 6. Get business units with unlimited results
+GET {{baseUrl}}/business-units?limit=*
+Authorization: {{token}}
+
+### 7. Create a new business unit
+POST {{baseUrl}}/business-units
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "Information Technology",
+  "description": "Responsible for all technology infrastructure and software development",
+  "is_active": true
+}
+
+### 8. Get specific business unit
+GET {{baseUrl}}/business-units/1
+Authorization: {{token}}
+
+### 9. Update business unit
+PUT {{baseUrl}}/business-units/1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "IT Department",
+  "description": "Updated description for IT department handling all technology needs"
+}
+
+### 10. Partial update business unit
+PATCH {{baseUrl}}/business-units/1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "is_active": false
+}
+
+### 11. Delete business unit
+DELETE {{baseUrl}}/business-units/1
+Authorization: {{token}}
+
+### 12. Test validation errors - missing required fields
+POST {{baseUrl}}/business-units
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "description": "Some description without name"
+}
+
+### 13. Test validation errors - empty name
+POST {{baseUrl}}/business-units
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "",
+  "description": "Valid description"
+}
+
+### 14. Test validation errors - whitespace only name
+POST {{baseUrl}}/business-units
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "   ",
+  "description": "Valid description"
+}
+
+### 15. Test validation errors - duplicate name
+POST {{baseUrl}}/business-units
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "Information Technology",
+  "description": "Another IT department"
+}
+
+### 16. Test validation errors - similar name (case insensitive)
+POST {{baseUrl}}/business-units
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "INFORMATION TECHNOLOGY",
+  "description": "Case insensitive duplicate test"
+}
+
+### 17. Test authorization - without token
+GET {{baseUrl}}/business-units
+
+### 18. Test long description
+POST {{baseUrl}}/business-units
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "Research and Development",
+  "description": "This is a very long description that should be within the 1000 character limit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt."
+}
+
+### 19. Test deactivating business unit with active contracts (should fail)
+PATCH {{baseUrl}}/business-units/1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "is_active": false
+}
+
+### 20. Test deleting business unit with active contracts (should fail)
+DELETE {{baseUrl}}/business-units/1
+Authorization: {{token}}

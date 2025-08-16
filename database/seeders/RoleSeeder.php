@@ -20,22 +20,34 @@ class RoleSeeder extends Seeder
                 'view-users', 'create-users', 'edit-users', 'delete-users', 'activate-users', 'deactivate-users',
                 'view-roles', 'create-roles', 'edit-roles', 'delete-roles', 'assign-roles',
                 'view-permissions', 'manage-permissions',
-                'view-audit-logs', 'delete-audit-logs'
+                'view-audit-logs', 'delete-audit-logs',
+                'view-contracts', 'create-contracts', 'edit-contracts',
+                'view-contract-counter-parties', 'create-contract-counter-parties', 'edit-contract-counter-parties',
+                'view-business-units', 'create-business-units', 'edit-business-units'
             ],
             'admin' => [
                 'view-users', 'create-users', 'edit-users', 'activate-users', 'deactivate-users',
                 'view-roles', 'assign-roles',
                 'view-permissions',
-                'view-audit-logs'
+                'view-audit-logs',
+                'view-contracts', 'create-contracts', 'edit-contracts',
+                'view-contract-counter-parties', 'create-contract-counter-parties', 'edit-contract-counter-parties',
+                'view-business-units', 'create-business-units', 'edit-business-units'
             ],
             'manager' => [
                 'view-users', 'create-users', 'edit-users',
                 'view-roles',
-                'view-permissions'
+                'view-permissions',
+                'view-contracts', 'create-contracts', 'edit-contracts',
+                'view-contract-counter-parties',
+                'view-business-units'
             ],
             'user' => [
                 'view-users',
-                'view-permissions'
+                'view-permissions',
+                'view-contracts',
+                'view-contract-counter-parties',
+                'view-business-units'
             ]
         ];
 

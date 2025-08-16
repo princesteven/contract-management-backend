@@ -1,0 +1,134 @@
+### 1. Get all contract counter parties
+GET {{baseUrl}}/contract-counter-parties
+Authorization: {{token}}
+
+### 2. Get counter parties with filters (OR logic)
+GET {{baseUrl}}/contract-counter-parties?name=Tech&email=contact&limit=5
+Authorization: {{token}}
+
+### 3. Get active counter parties only
+GET {{baseUrl}}/contract-counter-parties?is_active=true
+Authorization: {{token}}
+
+### 4. Search by contact person
+GET {{baseUrl}}/contract-counter-parties?contact_person=John
+Authorization: {{token}}
+
+### 5. Search by phone number
+GET {{baseUrl}}/contract-counter-parties?phone=255123456789
+Authorization: {{token}}
+
+### 6. Get counter parties with unlimited results
+GET {{baseUrl}}/contract-counter-parties?limit=*
+Authorization: {{token}}
+
+### 7. Create a new contract counter party
+POST {{baseUrl}}/contract-counter-parties
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "TechCorp Solutions",
+  "contact_person": "John Doe",
+  "email": "john.doe@techcorp.com",
+  "phone": "255123456789",
+  "address": "123 Business Street, Dar es Salaam",
+  "is_active": true
+}
+
+### 8. Get specific contract counter party
+GET {{baseUrl}}/contract-counter-parties/1
+Authorization: {{token}}
+
+### 9. Update contract counter party
+PUT {{baseUrl}}/contract-counter-parties/1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "TechCorp Solutions Ltd",
+  "contact_person": "Jane Smith",
+  "email": "jane.smith@techcorp.com",
+  "phone": "255987654321",
+  "address": "456 Updated Street, Dar es Salaam"
+}
+
+### 10. Partial update counter party
+PATCH {{baseUrl}}/contract-counter-parties/1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "is_active": false
+}
+
+### 11. Delete contract counter party
+DELETE {{baseUrl}}/contract-counter-parties/1
+Authorization: {{token}}
+
+### 12. Test validation errors - missing required fields
+POST {{baseUrl}}/contract-counter-parties
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "contact_person": "John Doe"
+}
+
+### 13. Test validation errors - invalid phone format
+POST {{baseUrl}}/contract-counter-parties
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "Test Company",
+  "email": "test@company.com",
+  "phone": "123456789"
+}
+
+### 14. Test validation errors - invalid email
+POST {{baseUrl}}/contract-counter-parties
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "Test Company",
+  "email": "invalid-email",
+  "phone": "255123456789"
+}
+
+### 15. Test validation errors - no contact method
+POST {{baseUrl}}/contract-counter-parties
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "Test Company",
+  "contact_person": "John Doe",
+  "address": "123 Street"
+}
+
+### 16. Test authorization - without token
+GET {{baseUrl}}/contract-counter-parties
+
+### 17. Test duplicate email validation
+POST {{baseUrl}}/contract-counter-parties
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "Another Company",
+  "email": "john.doe@techcorp.com",
+  "phone": "255111222333"
+}
+
+### 18. Test duplicate phone validation
+POST {{baseUrl}}/contract-counter-parties
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "name": "Another Company",
+  "email": "another@company.com",
+  "phone": "255123456789"
+}

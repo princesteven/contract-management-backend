@@ -37,6 +37,21 @@ class PermissionSeeder extends Seeder
             // Audit Log Management
             'view-audit-logs',
             'delete-audit-logs',
+            
+            // Contract Management Permissions
+            'view-contracts',
+            'create-contracts',
+            'edit-contracts',
+            
+            // Contract Counter Party Management Permissions
+            'view-contract-counter-parties',
+            'create-contract-counter-parties',
+            'edit-contract-counter-parties',
+            
+            // Business Unit Management Permissions
+            'view-business-units',
+            'create-business-units',
+            'edit-business-units',
         ];
 
         // Create permissions only if they don't exist (idempotent)
